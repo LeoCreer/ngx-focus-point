@@ -4,7 +4,7 @@ Websites don't have a single layout any more. The space you have for an image ma
 
 If you have to use the same image file in all these contexts, you might not be happy with the results you get when you 'fill' the allocated space with your image. Your subject might be clipped or completely missing, or just really awkward looking.
 
-[Demo and Focus Tool](https:believablecreations.com/ngx-focus-point?src=https://66.media.tumblr.com/8fd2436a90888b09af3c1eeefe8ef250/tumblr_p6ud1vgk6g1qjac96o1_1280.jpg).
+[Demo and Focus Tool](https://believablecreations.com/ngx-focus-point?src=https://66.media.tumblr.com/8fd2436a90888b09af3c1eeefe8ef250/tumblr_p6ud1vgk6g1qjac96o1_1280.jpg).
 
 This component does not rely on jQuery.
 
