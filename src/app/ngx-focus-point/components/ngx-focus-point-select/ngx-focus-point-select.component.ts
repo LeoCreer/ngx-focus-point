@@ -56,11 +56,10 @@ export class NgxFocusPointSelectComponent implements OnInit {
     let focusX = (offsetX / imageW - 0.5) * 2;
     let focusY = (offsetY / imageH - 0.5) * -2;
     this.focusPointAttr.x = this.truncateDecimals(focusX, 2);
-    this.focusPointAttr.y =  this.truncateDecimals(focusY, 2);;
+    this.focusPointAttr.y = this.truncateDecimals(focusY, 2);
     this.selectPosition.x = (offsetX / imageW) * 100;
     this.selectPosition.y = (offsetY / imageH) * 100;
     this.change.next(this.focusPointAttr);
-    console.log(this.focusPointAttr);
   }
 
   public getCenter() {
@@ -70,7 +69,7 @@ export class NgxFocusPointSelectComponent implements OnInit {
     let offsetY = imageH / 2 - this.ImageElement.offsetTop;
     this.selectPosition.x = (offsetX / imageW) * 100;
     this.selectPosition.y = (offsetY / imageH) * 100;
-    console.log(this.selectPosition);
+    this.change.next(this.focusPointAttr);
   }
 
   public truncateDecimals(number, digits) {

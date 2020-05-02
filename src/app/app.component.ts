@@ -15,7 +15,11 @@ export class AppComponent {
   );
   public data: FormControl = new FormControl(JSON.stringify(this.position, null, 2));
   onChangeUpdatePosition($event: PositionModel) {
+    console.log('ROOT',$event);
     this.position = $event;
     this.data.setValue(JSON.stringify(this.position, null, 2))
+  }
+  constructor() {
+    console.log('ROOT',this.position);
   }
 }
