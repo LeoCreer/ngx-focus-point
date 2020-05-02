@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "aot": true,
             "outputPath": "dist/NGX-Focus-Point",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -53,6 +54,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -145,6 +150,11 @@
           "options": {
             "tsConfig": "projects/ngx-focus-point/tsconfig.lib.json",
             "project": "projects/ngx-focus-point/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-focus-point/tsconfig.lib.prod.json"
+            }
           }
         },
         "test": {
@@ -170,5 +180,8 @@
       }
     }
   },
-  "defaultProject": "NGX-Focus-Point"
+  "defaultProject": "NGX-Focus-Point",
+  "cli": {
+    "analytics": "bb16341c-1df5-449c-8a3a-7990f89f4092"
+  }
 }

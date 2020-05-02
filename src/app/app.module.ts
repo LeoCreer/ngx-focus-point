@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {NgxFocusPointModule} from './ngx-focus-point/ngx-focus-point.module';
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 
@@ -14,7 +15,8 @@ import {NgxFocusPointModule} from './ngx-focus-point/ngx-focus-point.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    NgxFocusPointModule
+    NgxFocusPointModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

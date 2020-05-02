@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
-import { NgxFocusPointComponent } from './ngx-focus-point.component';
+import { CommonModule } from '@angular/common';
+import {NgxFocusPointComponent} from "./ngx-focus-point.component";
+import {NgxFocusPointSelectComponent} from "./ngx-focus-point-select.component";
+
 
 @NgModule({
-  declarations: [NgxFocusPointComponent],
+  declarations: [NgxFocusPointComponent, NgxFocusPointSelectComponent],
   imports: [
-  ],
-  exports: [NgxFocusPointComponent]
+    CommonModule
+  ], exports: [NgxFocusPointComponent, NgxFocusPointSelectComponent]
 })
 export class NgxFocusPointModule { }

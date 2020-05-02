@@ -7,6 +7,6 @@ import { NgxFocusPointSelectComponent } from './components/ngx-focus-point-selec
   declarations: [NgxFocusPointComponent, NgxFocusPointSelectComponent],
   imports: [
     CommonModule
-  ], exports: [NgxFocusPointComponent]
+  ], exports: [NgxFocusPointComponent, NgxFocusPointSelectComponent]
 })
 export class NgxFocusPointModule { }

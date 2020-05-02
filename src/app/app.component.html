@@ -1,8 +1,11 @@
-<!--The content below is only a placeholder and can be replaced.-->
+<!--
+<ngx-focus-point-select (change)="onChangeUpdatePosition($event)" src="http://natewhitehill.com/wp-content/uploads/2013/08/ultimate-seattle-wallpaper.jpg">
+
+</ngx-focus-point-select>
 
 
-<ngx-focus-point
-  style="height: 100%; width: 100%; position: absolute; top:0; left:0"
+<ngx-focus-point class="small" [focusX]="position.x"
+                 [focusY]="position.y"
 >
   <img
     [src]="
@@ -13,4 +16,47 @@
 
 </ngx-focus-point>
 
+-->
+
+
+<div class="select-container">
+  <ngx-focus-point-select class="select" (change)="onChangeUpdatePosition($event)" [src]="src.value">
+
+  </ngx-focus-point-select>
+  <input type="text" [formControl]="src">
+  <input type="text" [formControl]="data">
+</div>
+
+
+
+
+<ngx-focus-point class="small" [focusX]="position.x"
+                 [focusY]="position.y"
+>
+  <img
+    [src]="
+      src.value
+    "
+    alt=""
+  />
+
+</ngx-focus-point>
+
+
+<ngx-focus-point class="large" [focusX]="position.x"
+                 [focusY]="position.y"
+>
+  <img
+    [src]="
+      src.value
+    "
+    alt=""
+  />
+
+</ngx-focus-point>
+
+
 <router-outlet></router-outlet>
+
+
+
