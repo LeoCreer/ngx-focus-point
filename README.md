@@ -1,27 +1,38 @@
-# NGXFocusPoint
+# NGX Focus Point
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.3.
+Websites don't have a single layout any more. The space you have for an image may be portrait on a laptop, landscape on a tablet, and square on a mobile - particularly if you're using a full-screen image.
 
-## Development server
+If you have to use the same image file in all these contexts, you might not be happy with the results you get when you 'fill' the allocated space with your image. Your subject might be clipped or completely missing, or just really awkward looking.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+[Demo and Focus Tool](https:believablecreations.com/ngx-focus-point?src=https://66.media.tumblr.com/8fd2436a90888b09af3c1eeefe8ef250/tumblr_p6ud1vgk6g1qjac96o1_1280.jpg).
 
-## Code scaffolding
+This component does not rely on jQuery.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Import Module.
+```
+import {NgxFocusPointModule} from './ngx-focus-point/ngx-focus-point.module';
+```
 
-## Build
+Use 'ngx-focus-point' component.
+```
+<ngx-focus-point [focusX]="0.0" [focusY]="0.0">
+  <img
+    src="your-image.jpg"
+  />
+</ngx-focus-point>
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Use 'ngx-focus-point-select' component.
 
-## Running unit tests
+```
+<ngx-focus-point-select (change)="updateFocus($event)" src="your-image.jpg"></ngx-focus-point-select>
+```
+ Output() change :{
+  x: number;
+  y: number;
+  h: number;
+}
+##Believable Creations 
+Submit a pull request [Help](https://github.com/LeoCreer/NGX-Focus-Point).
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
