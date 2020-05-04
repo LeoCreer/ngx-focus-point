@@ -63,15 +63,6 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
 
-    // this.windowSubscription = fromEvent(window, 'resize')
-    //   .pipe(
-    //     debounceTime(30),
-    //     tap((event) => {
-    //       this.adjustFocus();
-    //     }),
-    //   )
-    //   .subscribe();
-    //
     new ResizeSensor.ResizeSensor(this.ComponentElements, (e) => {
       this.adjustFocus();
     });

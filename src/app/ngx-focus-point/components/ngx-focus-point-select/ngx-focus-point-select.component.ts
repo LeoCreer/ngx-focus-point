@@ -30,7 +30,6 @@ export class NgxFocusPointSelectComponent implements OnInit {
 
   ngOnInit() {
     this.TempImageElement.src = this.src;
-    console.log(this.ImageElementRef);
     this.ImageElement = this.ImageElementRef.nativeElement;
     this.imageLoad$ = fromEvent(this.TempImageElement, 'load').pipe(
       tap((event) => {

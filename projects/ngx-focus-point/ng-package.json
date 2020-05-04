@@ -1,7 +1,11 @@
 {
   "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+  "whitelistedNonPeerDependencies": ["css-element-queries"],
   "dest": "../../dist/ngx-focus-point",
   "lib": {
+    "umdModuleIds": {
+      "css-element-queries": "ResizeSensor"
+    },
     "entryFile": "src/public_api.ts"
   }
 }

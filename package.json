@@ -4,7 +4,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
-    "build": "ng build",
+    "build": "ng build --prod=true --output-path=www --base-href=/ngx-focus-point/",
+    "build-library": "ng build ngx-focus-point --prod",
+    "publish-library": "cd dist/ngx-focus-point && npm publish",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
