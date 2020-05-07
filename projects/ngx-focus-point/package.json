@@ -1,6 +1,6 @@
 {
   "name": "ngx-focus-point",
-  "version": "9.1.7",
+  "version": "9.1.8",
   "dependencies": {
     "css-element-queries": "^1.2.3"
   },

@@ -24,7 +24,6 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
   public maxHeight: number;
   public imagePositionLeft: string | number;
   public imagePositionTop: string | number;
-  private windowSubscription: Subscription;
   private imageSubscription: Subscription;
   public animation: '1s';
 
@@ -63,15 +62,6 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
 
-    // this.windowSubscription = fromEvent(window, 'resize')
-    //   .pipe(
-    //     debounceTime(30),
-    //     tap((event) => {
-    //       this.adjustFocus();
-    //     }),
-    //   )
-    //   .subscribe();
-    //
     new ResizeSensor.ResizeSensor(this.ComponentElements, (e) => {
       this.adjustFocus();
     });
@@ -145,8 +135,13 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-    ResizeSensor.ResizeSensor.detach(this.ComponentElements);
-    this.windowSubscription.unsubscribe();
-    this.imageSubscription.unsubscribe();
+    try {
+      ResizeSensor.ResizeSensor.detach(this.ComponentElements);
+      if (this.imageSubscription) {
+        this.imageSubscription.unsubscribe();
+      }
+    } catch (e) {
+      console.warn(e);
+    }
   }
 }
