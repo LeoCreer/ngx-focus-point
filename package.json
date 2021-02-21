@@ -1,12 +1,13 @@
 {
   "name": "ngx-focus-point",
-  "version": "9.1.8",
+  "version": "11.2.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
     "build": "ng build --prod=true --output-path=www --base-href=/ngx-focus-point/",
     "build-library": "ng build ngx-focus-point --prod",
     "publish-library": "cd dist/ngx-focus-point && npm publish",
+    "publish-library2": "npm publish dist/ngx-focus-point",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
