@@ -15,11 +15,12 @@ export class AppComponent implements OnInit, OnDestroy {
   public position: PositionModel;
   public routes$: Subscription;
   public src: FormControl = new FormControl(null);
-  public data: FormControl = new FormControl(JSON.stringify(this.position, null, 2));
+  public data: FormControl;
 
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.data = new FormControl(JSON.stringify(this.position, null, 2));
     this.routes$ = this.route.queryParams
       .pipe(
         tap((params) => {
