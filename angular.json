@@ -18,7 +18,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "aot": true,
-            "outputPath": "dist/NGX-Focus-Point",
+            "outputPath": "dist/NGX-Focus-Point/browser",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -101,11 +101,59 @@
           "options": {
             "tsConfig": [
               "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "src/tsconfig.spec.json",
+              "src/tsconfig.server.json"
             ],
             "exclude": [
               "**/node_modules/**"
             ]
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/NGX-Focus-Point/server",
+            "main": "server.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            }
+          }
+        },
+        "serve-ssr": {
+          "builder": "@nguniversal/builders:ssr-dev-server",
+          "options": {
+            "browserTarget": "NGX-Focus-Point:build",
+            "serverTarget": "NGX-Focus-Point:server"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "NGX-Focus-Point:build:production",
+              "serverTarget": "NGX-Focus-Point:server:production"
+            }
+          }
+        },
+        "prerender": {
+          "builder": "@nguniversal/builders:prerender",
+          "options": {
+            "browserTarget": "NGX-Focus-Point:build:production",
+            "serverTarget": "NGX-Focus-Point:server:production",
+            "routes": [
+              "/"
+            ]
+          },
+          "configurations": {
+            "production": {}
           }
         }
       }

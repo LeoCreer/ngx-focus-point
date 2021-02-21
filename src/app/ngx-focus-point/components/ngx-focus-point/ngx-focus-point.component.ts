@@ -67,7 +67,6 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
     this.resizeSub$ = fromEvent(resize.elements[0], 'resize')
       .pipe(
         tap((event) => {
-          console.log(event);
           this.adjustFocus();
         }),
       )

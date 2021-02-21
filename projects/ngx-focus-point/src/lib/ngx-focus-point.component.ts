@@ -3,6 +3,7 @@ import { fromEvent, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { OnResize } from './on-resize';
 
+
 @Component({
   selector: 'ngx-focus-point',
   templateUrl: './ngx-focus-point.component.html',
@@ -66,7 +67,6 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
     this.resizeSub$ = fromEvent(resize.elements[0], 'resize')
       .pipe(
         tap((event) => {
-          console.log(event);
           this.adjustFocus();
         }),
       )
@@ -79,7 +79,7 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     try {
-      if (this.resizeSub$) {
+      if(this.resizeSub$) {
         this.resizeSub$.unsubscribe();
       }
       if (this.imageSubscription) {

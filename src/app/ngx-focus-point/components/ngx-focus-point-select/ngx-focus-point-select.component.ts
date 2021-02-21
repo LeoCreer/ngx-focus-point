@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, Inject, Input, OnInit, Output, PLATFORM_ID, ViewChild } from '@angular/core';
 import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PositionModel } from '../../models/position.model';
@@ -16,7 +16,7 @@ export class NgxFocusPointSelectComponent implements OnInit {
   );
   @ViewChild('img', { static: true }) ImageElementRef: ElementRef;
   private ImageElement: HTMLImageElement;
-  private TempImageElement: HTMLImageElement = document.createElement('img');
+  private TempImageElement: HTMLImageElement = this.getDocument() ? document.createElement('img') : null;
   public focusPointAttr: PositionModel = {
     x: 0,
     y: 0,
@@ -28,16 +28,26 @@ export class NgxFocusPointSelectComponent implements OnInit {
 
   constructor() {}
 
+  private getDocument() {
+    try {
+      return document;
+    } catch (e) {
+      return null;
+    }
+  }
+
   ngOnInit() {
-    this.TempImageElement.src = this.src;
-    this.ImageElement = this.ImageElementRef.nativeElement;
-    this.imageLoad$ = fromEvent(this.TempImageElement, 'load').pipe(
-      tap((event) => {
-        this.focusPointAttr.h = this.TempImageElement.height;
-        this.focusPointAttr.w = this.TempImageElement.width;
-        this.getCenter();
-      }),
-    );
+    if (this.src && this.getDocument()) {
+      this.TempImageElement.src = this.src;
+      this.ImageElement = this.ImageElementRef.nativeElement;
+      this.imageLoad$ = fromEvent(this.TempImageElement, 'load').pipe(
+        tap((event) => {
+          this.focusPointAttr.h = this.TempImageElement.height;
+          this.focusPointAttr.w = this.TempImageElement.width;
+          this.getCenter();
+        }),
+      );
+    }
   }
 
   public onClickFocus(e: MouseEvent) {

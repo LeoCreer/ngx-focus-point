@@ -16,29 +16,34 @@ export class OnResize {
   }
 
   public start(skipStop = false) {
-    if (!skipStop) {
-      this.stop();
-    }
-    this.elements
-      .filter((element) => isElementInViewport(element))
-      .forEach((element) => {
-        const previousSize = getDataFromElement(element, this.sizeCacheKey);
-        const currentSize = getSizeFromElement(element);
+    try {
+      if (!skipStop) {
+        this.stop();
+      }
+      this.elements
+        .filter((element) => isElementInViewport(element))
+        .forEach((element) => {
+          const previousSize = getDataFromElement(element, this.sizeCacheKey);
+          const currentSize = getSizeFromElement(element);
 
-        if (previousSize && checkSizeDiff(currentSize, previousSize)) {
-          element.dispatchEvent(
-            new CustomEvent(this.resizeEventName, {
-              detail: currentSize,
-            }),
-          );
-        }
-        setDataInElement(element, this.sizeCacheKey, currentSize);
-      });
-    if (isWindowAvailable()) {
-      this.animationFrameHandle = requestAnimationFrame(() => this.start(true));
-    } else {
-      this.animationFrameHandle = setTimeout(() => this.start(true), 1000 / 60);
+          if (previousSize && checkSizeDiff(currentSize, previousSize)) {
+            element.dispatchEvent(
+              new CustomEvent(this.resizeEventName, {
+                detail: currentSize,
+              }),
+            );
+          }
+          setDataInElement(element, this.sizeCacheKey, currentSize);
+        });
+      if (isWindowAvailable()) {
+        this.animationFrameHandle = requestAnimationFrame(() => this.start(true));
+      } else {
+        this.animationFrameHandle = setTimeout(() => this.start(true), 1000 / 60);
+      }
+    } catch (e) {
+
     }
+
   }
 }
 
@@ -57,8 +62,8 @@ const isWindowAvailable = () => {
 };
 
 const isElementInViewport = (element: HTMLElement) => {
-  const rect = element.getBoundingClientRect();
   try {
+    const rect = element.getBoundingClientRect();
     const windowHeight = window.innerHeight || document.documentElement.clientHeight;
     const windowWidth = window.innerWidth || document.documentElement.clientWidth;
     // http://stackoverflow.com/questions/325933/determine-whether-two-date-ranges-overlap
@@ -83,11 +88,19 @@ const checkSizeDiff = (size1: Size, size2: Size) => {
 };
 
 const getSizeFromElement = (element: HTMLElement): Size => {
-  const computedStyles = window.getComputedStyle(element);
-  return {
-    width: parseInt(computedStyles.width, 10),
-    height: parseInt(computedStyles.height, 10),
-  };
+  try {
+    const computedStyles = window.getComputedStyle(element);
+    return {
+      width: parseInt(computedStyles.width, 10),
+      height: parseInt(computedStyles.height, 10),
+    };
+  } catch (e) {
+    return {
+      width: 0,
+      height: 0,
+    };
+  }
+
 };
 
 interface Size {

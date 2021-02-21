@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PositionModel } from './ngx-focus-point/models/position.model';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -39,6 +39,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   public onChangeUpdatePosition($event: PositionModel) {
     this.position = $event;
-    this.data.setValue(JSON.stringify(this.position, null, 2));
+    if (this.data) {
+      this.data.setValue(JSON.stringify(this.position, null, 2));
+    }
   }
 }
