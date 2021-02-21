@@ -1,3 +1,4 @@
+
 <!--
 <ngx-focus-point-select (change)="onChangeUpdatePosition($event)" src="http://natewhitehill.com/wp-content/uploads/2013/08/ultimate-seattle-wallpaper.jpg">
 
@@ -29,6 +30,20 @@
 
 
 
+
+<div class='resizable-element'>
+  <ngx-focus-point  [focusX]="position.x"
+                   [focusY]="position.y"
+  >
+    <img
+      [src]="
+      src.value
+    "
+      alt=""
+    />
+
+  </ngx-focus-point>
+</div>
 
 <ngx-focus-point class="small" [focusX]="position.x"
                  [focusY]="position.y"
