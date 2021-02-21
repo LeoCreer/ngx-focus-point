@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import * as ResizeSensor from 'css-element-queries';
+
 
 @Component({
   selector: 'ngx-focus-point',
@@ -62,9 +62,6 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
 
-    new ResizeSensor.ResizeSensor(this.ComponentElements, (e) => {
-      this.adjustFocus();
-    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -136,7 +133,6 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     try {
-      ResizeSensor.ResizeSensor.detach(this.ComponentElements);
       if (this.imageSubscription) {
         this.imageSubscription.unsubscribe();
       }
