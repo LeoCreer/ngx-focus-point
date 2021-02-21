@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import {PositionModel} from "./position.model";
+import { PositionModel } from './position.model';
 
 @Component({
   selector: 'ngx-focus-point-select',

@@ -1,7 +1,7 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import * as ResizeSensor from 'css-element-queries';
+import { OnResize } from './on-resize';
 
 @Component({
   selector: 'ngx-focus-point',
@@ -11,22 +11,22 @@ import * as ResizeSensor from 'css-element-queries';
 export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
   @Input() width?: string;
   @Input() height?: string;
-  @Input() focusX?: number = 0;
-  @Input() focusY?: number = 0;
+  @Input() focusX = 0.0;
+  @Input() focusY = 0.0;
   @Input() src?: string;
+  @Input() animation = '1s';
+  public maxWidth: number;
+  public maxHeight: number;
+  public imagePositionLeft: string | number;
+  public imagePositionTop: string | number;
   private containerWidth: number;
   private containerHeight: number;
   private imageWidth: number;
   private imageHeight: number;
   private ComponentElements: HTMLElement;
   private ImageElement: HTMLElement;
-  public maxWidth: number;
-  public maxHeight: number;
-  public imagePositionLeft: string | number;
-  public imagePositionTop: string | number;
   private imageSubscription: Subscription;
-  public animation: '1s';
-
+  private resizeSub$: Subscription;
   constructor(private elRef: ElementRef) {}
 
   ngOnInit() {
@@ -48,8 +48,8 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
       'backface-visibility: hidden;' +
       'transform: translate3d(0%, 0%, 0);' +
       'transition: left ' +
-      '1s, top ' +
-      '1s' +
+      `${this.animation}, top ` +
+      `${this.animation}` +
       ' ease-in-out;';
 
     this.imageSubscription = fromEvent(this.ImageElement, 'load')
@@ -62,13 +62,32 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
 
-    new ResizeSensor.ResizeSensor(this.ComponentElements, (e) => {
-      this.adjustFocus();
-    });
+    const resize = new OnResize([this.ComponentElements]);
+    this.resizeSub$ = fromEvent(resize.elements[0], 'resize')
+      .pipe(
+        tap((event) => {
+          console.log(event);
+          this.adjustFocus();
+        }),
+      )
+      .subscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     this.adjustFocus();
+  }
+
+  ngOnDestroy(): void {
+    try {
+      if (this.resizeSub$) {
+        this.resizeSub$.unsubscribe();
+      }
+      if (this.imageSubscription) {
+        this.imageSubscription.unsubscribe();
+      }
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   private adjustFocus() {
@@ -132,16 +151,5 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
     }
 
     return (focusOffset * -100) / containerSize;
-  }
-
-  ngOnDestroy(): void {
-    try {
-      ResizeSensor.ResizeSensor.detach(this.ComponentElements);
-      if (this.imageSubscription) {
-        this.imageSubscription.unsubscribe();
-      }
-    } catch (e) {
-      console.warn(e);
-    }
   }
 }
