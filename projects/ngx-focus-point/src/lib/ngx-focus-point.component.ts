@@ -3,7 +3,6 @@ import { fromEvent, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { OnResize } from './on-resize';
 
-
 @Component({
   selector: 'ngx-focus-point',
   templateUrl: './ngx-focus-point.component.html',
@@ -28,7 +27,18 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
   private ImageElement: HTMLElement;
   private imageSubscription: Subscription;
   private resizeSub$: Subscription;
-  constructor(private elRef: ElementRef) {}
+
+  constructor(private elRef: ElementRef) {
+    // console.log(this.focusX);
+    // console.log(this.focusY);
+    if (!this.focusX) {
+      this.focusX = 0.0;
+    }
+    if (!this.focusY) {
+      this.focusY = 0.0;
+    }
+  }
+
 
   ngOnInit() {
     this.ComponentElements = this.elRef.nativeElement;
@@ -79,7 +89,7 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnDestroy(): void {
     try {
-      if(this.resizeSub$) {
+      if (this.resizeSub$) {
         this.resizeSub$.unsubscribe();
       }
       if (this.imageSubscription) {
@@ -113,11 +123,10 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
           this.ImageElement.style.maxWidth = '100%';
         }
       }
-
       if (wR > hR) {
-        hShift = this.calcShift(hR, this.containerWidth, this.imageWidth, parseFloat(this.focusX.toString()));
+        hShift = this.calcShift(hR, this.containerWidth, this.imageWidth, parseFloat(!this.focusX ? '0.0' : this.focusX.toString()));
       } else if (wR < hR) {
-        vShift = this.calcShift(wR, this.containerHeight, this.imageHeight, parseFloat(this.focusY.toString()), true);
+        vShift = this.calcShift(wR, this.containerHeight, this.imageHeight, parseFloat(!this.focusY ? '0.0' : this.focusY.toString()), true);
       }
 
       this.ImageElement.style.left = `${hShift}%`;

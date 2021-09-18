@@ -1,12 +1,13 @@
 {
   "name": "ngx-focus-point",
-  "version": "11.0.3",
-  "dependencies": {
-    "tslib": "^2.0.0"
+  "version": "12.2.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LeoCreer/ngx-focus-point"
   },
   "peerDependencies": {
-    "@angular/common": "^11.2.0",
-    "@angular/core": "^11.2.0",
-    "rxjs": "~6.6.3"
+    "@angular/common": "^12.2.6",
+    "@angular/core": "^12.2.6",
+    "rxjs": "^7.3.0"
   }
 }

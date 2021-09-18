@@ -1,5 +1,5 @@
 import { Component, ElementRef, Inject, Input, OnInit, Output, PLATFORM_ID, ViewChild } from '@angular/core';
-import { BehaviorSubject, fromEvent, Observable } from 'rxjs';
+import { BehaviorSubject, fromEvent, Observable, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { PositionModel } from '../../models/position.model';
 
@@ -11,9 +11,7 @@ import { PositionModel } from '../../models/position.model';
 export class NgxFocusPointSelectComponent implements OnInit {
   @Input() src: any;
   @Input() selectPosition: Partial<PositionModel> = { x: 0.0, y: 0.0 };
-  @Output() change: BehaviorSubject<PositionModel> = new BehaviorSubject<PositionModel>(
-    this.selectPosition as PositionModel,
-  );
+  @Output() change: Subject<PositionModel> = new Subject<PositionModel>();
   @ViewChild('img', { static: true }) ImageElementRef: ElementRef;
   private ImageElement: HTMLImageElement;
   private TempImageElement: HTMLImageElement = this.getDocument() ? document.createElement('img') : null;
@@ -47,14 +45,19 @@ export class NgxFocusPointSelectComponent implements OnInit {
           this.getCenter();
         }),
       );
+
     }
   }
 
   public onClickFocus(e: MouseEvent) {
-    let imageW = this.ImageElement.clientWidth;
-    let imageH = this.ImageElement.clientHeight;
+    const imageW = this.ImageElement.clientWidth;
+    const imageH = this.ImageElement.clientHeight;
     let offsetX;
     let offsetY;
+    console.log(this.ImageElement.offsetLeft);
+    console.log(this.ImageElement.offsetTop);
+
+    console.log((this.ImageElement.offsetTop - e.offsetY) / imageW, ' ', this.ImageElement.offsetLeft - e.offsetX );
     if (e) {
       offsetX = e.offsetX - this.ImageElement.offsetLeft;
       offsetY = e.offsetY - this.ImageElement.offsetTop;
@@ -62,8 +65,8 @@ export class NgxFocusPointSelectComponent implements OnInit {
       offsetX = 0.0 - this.ImageElement.offsetLeft;
       offsetY = 0.0 - this.ImageElement.offsetTop;
     }
-    let focusX = (offsetX / imageW - 0.5) * 2;
-    let focusY = (offsetY / imageH - 0.5) * -2;
+    const focusX = (offsetX / imageW - 0.5) * 2;
+    const focusY = (offsetY / imageH - 0.5) * -2;
     this.focusPointAttr.x = this.truncateDecimals(focusX, 2);
     this.focusPointAttr.y = this.truncateDecimals(focusY, 2);
     this.selectPosition.x = (offsetX / imageW) * 100;
@@ -72,20 +75,25 @@ export class NgxFocusPointSelectComponent implements OnInit {
   }
 
   public getCenter() {
-    let imageW = this.ImageElement.clientWidth;
-    let imageH = this.ImageElement.clientHeight;
-    let offsetX = imageW / 2 - this.ImageElement.offsetLeft;
-    let offsetY = imageH / 2 - this.ImageElement.offsetTop;
-    this.selectPosition.x = (offsetX / imageW) * 100;
-    this.selectPosition.y = (offsetY / imageH) * 100;
-    this.change.next(this.focusPointAttr);
+    const imageW = this.ImageElement.clientWidth;
+    const imageH = this.ImageElement.clientHeight;
+    const offsetX = imageW / 2 - this.ImageElement.offsetLeft;
+    const offsetY = imageH / 2 - this.ImageElement.offsetTop;
+    if (this.selectPosition) {
+      this.selectPosition.x = (offsetX / imageW) * 100;
+      this.selectPosition.y = (offsetY / imageH) * 100;
+    } else {
+      this.selectPosition.x = (offsetX / imageW) * 100;
+      this.selectPosition.y = (offsetY / imageH) * 100;
+    }
+
+    // this.change.next(this.focusPointAttr);
   }
 
   public truncateDecimals(number, digits) {
-    var multiplier = Math.pow(10, digits),
+    const multiplier = Math.pow(10, digits),
       adjustedNum = number * multiplier,
       truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
-
     return truncatedNum / multiplier;
   }
 }

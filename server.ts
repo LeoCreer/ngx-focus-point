@@ -1,4 +1,4 @@
-import 'zone.js/dist/zone-node';
+import 'zone.js/node';
 
 const domino = require('domino');
 const fs = require('fs');

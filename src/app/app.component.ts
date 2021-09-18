@@ -38,6 +38,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   public onChangeUpdatePosition($event: PositionModel) {
+    console.log('event', $event);
     this.position = $event;
     if (this.data) {
       this.data.setValue(JSON.stringify(this.position, null, 2));
