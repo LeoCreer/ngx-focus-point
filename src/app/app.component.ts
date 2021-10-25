@@ -16,6 +16,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public routes$: Subscription;
   public src: FormControl = new FormControl(null);
   public data: FormControl;
+  public preset = {x: -0.39, y: 0.13, w: 0, h: 0, s: 1};
 
   constructor(private route: ActivatedRoute) {}
 
@@ -29,6 +30,10 @@ export class AppComponent implements OnInit, OnDestroy {
               ? params.src.toString()
               : 'https://66.media.tumblr.com/8fd2436a90888b09af3c1eeefe8ef250/tumblr_p6ud1vgk6g1qjac96o1_1280.jpg',
           );
+
+          // setTimeout(() => {
+          //   this.src.setValue('https://www.boredpanda.com/blog/wp-content/uploads/2018/03/The-artist-spent-the-last-decade-composing-one-image-per-day-5aaa29f3771ed__880.jpg')
+          // }, 9000)
         }),
       )
       .subscribe();

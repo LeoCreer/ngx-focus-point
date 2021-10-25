@@ -5,22 +5,5 @@
   backface-visibility: hidden;
   height: 100%;
   width: 100%;
-  img.focus-point {
-    z-index: auto;
-    position: absolute;
-    left: 0;
-    top: 0;
-    margin: 0;
-    display: block;
-    width: auto;
-    height: auto;
-    min-width: 100%;
-    min-height: 100%;
-    max-height: none;
-    max-width: none;
-    backface-visibility: hidden;
-    transform: translate3d(0%, 0%, 0);
-    transition: left 1s, top 1s ease-in-out;
-  }
-
+  background-color: white;
 }

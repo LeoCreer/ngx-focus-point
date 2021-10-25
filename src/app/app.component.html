@@ -20,8 +20,13 @@
 -->
 
 
-<div class="select-container">
-  <ngx-focus-point-select class="select"  (change)="onChangeUpdatePosition($event)" [src]="src.value">
+<div class="select-container " style='width: 334px'>
+  <ngx-focus-point-select
+    class="select"
+    [enableScale]='true'
+    [selectPosition]='preset'
+    (positionChange)="onChangeUpdatePosition($event)"
+    [src]="src.value">
 
   </ngx-focus-point-select>
   <input type="text" [formControl]="src">
@@ -32,8 +37,11 @@
 
 
 <div class='resizable-element'>
-  <ngx-focus-point  [focusX]="position?.x"
+  <ngx-focus-point
+    animation='1s'
+    [focusX]="position?.x"
                    [focusY]="position?.y"
+                    [scale]='position?.s'
   >
     <img
       [src]="
@@ -47,6 +55,7 @@
 
 <ngx-focus-point class="small" [focusX]="position?.x"
                  [focusY]="position?.y"
+                 [scale]='position?.s'
 >
   <img
     [src]="
@@ -60,6 +69,7 @@
 
 <ngx-focus-point class="large" [focusX]="position?.x"
                  [focusY]="position?.y"
+                 [scale]='position?.s'
 >
   <img
     [src]="

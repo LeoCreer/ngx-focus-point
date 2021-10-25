@@ -1,7 +1,8 @@
 import { Component, ElementRef, Inject, Input, OnInit, Output, PLATFORM_ID, ViewChild } from '@angular/core';
 import { BehaviorSubject, fromEvent, Observable, Subject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { debounceTime, filter, tap } from 'rxjs/operators';
 import { PositionModel } from '../../models/position.model';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'ngx-focus-point-select',
@@ -11,15 +12,23 @@ import { PositionModel } from '../../models/position.model';
 export class NgxFocusPointSelectComponent implements OnInit {
   @Input() src: any;
   @Input() selectPosition: Partial<PositionModel> = { x: 0.0, y: 0.0 };
+  @Input() scale = 1;
+  @Input() enableScale = false;
   @Output() change: Subject<PositionModel> = new Subject<PositionModel>();
+  @Output() positionChange: Subject<PositionModel> = new Subject<PositionModel>();
   @ViewChild('img', { static: true }) ImageElementRef: ElementRef;
   private ImageElement: HTMLImageElement;
   private TempImageElement: HTMLImageElement = this.getDocument() ? document.createElement('img') : null;
+  public scaleChange: Observable<any>;
+  public form: FormGroup = new FormGroup({
+    slider: new FormControl(0),
+  });
   public focusPointAttr: PositionModel = {
     x: 0,
     y: 0,
     w: 0,
     h: 0,
+    s: 0,
   };
 
   public imageLoad$: Observable<any>;
@@ -40,12 +49,21 @@ export class NgxFocusPointSelectComponent implements OnInit {
       this.ImageElement = this.ImageElementRef.nativeElement;
       this.imageLoad$ = fromEvent(this.TempImageElement, 'load').pipe(
         tap((event) => {
-          this.focusPointAttr.h = this.TempImageElement.height;
-          this.focusPointAttr.w = this.TempImageElement.width;
+          const imageW = this.ImageElement.clientWidth;
+          const imageH = this.ImageElement.clientHeight;
           this.getCenter();
         }),
       );
-
+      this.scaleChange = this.form.get('slider').valueChanges.pipe(
+        tap((value) => {
+          if (value / 1000 <= 1) {
+            this.scale = 1;
+          } else {
+            this.scale = value / 1000;
+          }
+          this.positionChange.next({ ...this.focusPointAttr, s: this.scale });
+        }),
+      );
     }
   }
 
@@ -54,10 +72,6 @@ export class NgxFocusPointSelectComponent implements OnInit {
     const imageH = this.ImageElement.clientHeight;
     let offsetX;
     let offsetY;
-    console.log(this.ImageElement.offsetLeft);
-    console.log(this.ImageElement.offsetTop);
-
-    console.log((this.ImageElement.offsetTop - e.offsetY) / imageW, ' ', this.ImageElement.offsetLeft - e.offsetX );
     if (e) {
       offsetX = e.offsetX - this.ImageElement.offsetLeft;
       offsetY = e.offsetY - this.ImageElement.offsetTop;
@@ -71,7 +85,8 @@ export class NgxFocusPointSelectComponent implements OnInit {
     this.focusPointAttr.y = this.truncateDecimals(focusY, 2);
     this.selectPosition.x = (offsetX / imageW) * 100;
     this.selectPosition.y = (offsetY / imageH) * 100;
-    this.change.next(this.focusPointAttr);
+    this.positionChange.next({ ...this.focusPointAttr, s: this.scale });
+    this.change.next({ ...this.focusPointAttr, s: this.scale });
   }
 
   public getCenter() {
@@ -86,8 +101,6 @@ export class NgxFocusPointSelectComponent implements OnInit {
       this.selectPosition.x = (offsetX / imageW) * 100;
       this.selectPosition.y = (offsetY / imageH) * 100;
     }
-
-    // this.change.next(this.focusPointAttr);
   }
 
   public truncateDecimals(number, digits) {

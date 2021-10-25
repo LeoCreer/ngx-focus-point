@@ -3,4 +3,5 @@ export interface PositionModel {
   y: number;
   w: number;
   h: number;
+  s?: number;
 }
