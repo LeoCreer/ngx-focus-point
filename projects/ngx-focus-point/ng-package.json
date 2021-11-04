@@ -3,9 +3,6 @@
   "whitelistedNonPeerDependencies": ["css-element-queries"],
   "dest": "../../dist/ngx-focus-point",
   "lib": {
-    "umdModuleIds": {
-      "css-element-queries": "ResizeSensor"
-    },
     "entryFile": "src/public_api.ts"
   }
 }
