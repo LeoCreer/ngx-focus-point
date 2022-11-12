@@ -1,8 +1,9 @@
-import { Component, ElementRef, Inject, Input, OnInit, Output, PLATFORM_ID, ViewChild } from '@angular/core';
-import { BehaviorSubject, fromEvent, Observable, Subject } from 'rxjs';
-import { debounceTime, filter, tap } from 'rxjs/operators';
-import { PositionModel } from './position.model';
-import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import {Component, ElementRef, Input, OnInit, Output} from '@angular/core';
+import {fromEvent, Observable, Subject} from 'rxjs';
+import {tap} from 'rxjs/operators';
+import {PositionModel} from './position.model';
+import {FormControl, FormGroup} from '@angular/forms';
+import {PlatformService} from './platform.service';
 
 @Component({
   selector: 'ngx-focus-point-select',
@@ -11,17 +12,13 @@ import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 })
 export class NgxFocusPointSelectComponent implements OnInit {
   @Input() src: any;
-  @Input() selectPosition: Partial<PositionModel> = { x: 0.0, y: 0.0 };
+  @Input() selectPosition: Partial<PositionModel> = {x: 0.0, y: 0.0};
   @Input() scale = 1;
   @Input() enableScale = false;
-  @Output() change: Subject<PositionModel> = new Subject<PositionModel>();
   @Output() positionChange: Subject<PositionModel> = new Subject<PositionModel>();
-  @ViewChild('img', { static: true }) ImageElementRef: ElementRef;
-  private ImageElement: HTMLImageElement;
-  private TempImageElement: HTMLImageElement = this.getDocument() ? document.createElement('img') : null;
-  public scaleChange: Observable<any>;
-  public form: UntypedFormGroup = new UntypedFormGroup({
-    slider: new UntypedFormControl(0),
+  public scaleChange: Observable<any> | undefined;
+  public form: FormGroup = new FormGroup({
+    slider: new FormControl(0),
   });
   public focusPointAttr: PositionModel = {
     x: 0,
@@ -30,54 +27,54 @@ export class NgxFocusPointSelectComponent implements OnInit {
     h: 0,
     s: 0,
   };
+  public imageLoad$: Observable<any> | undefined;
+  private ComponentElements: HTMLElement | undefined;
+  private MediaElement: HTMLImageElement | HTMLVideoElement | undefined;
+  private TempImageElement: HTMLImageElement | undefined;
 
-  public imageLoad$: Observable<any>;
-
-  constructor() {}
-
-  private getDocument() {
-    try {
-      return document;
-    } catch (e) {
-      return null;
-    }
+  constructor(private platformSvc: PlatformService, private elRef: ElementRef) {
   }
 
   ngOnInit() {
-    if (this.src && this.getDocument()) {
+    if (this.platformSvc.isPlatformBrowser && this.src) {
+      this.TempImageElement = document.createElement('img');
+      this.ComponentElements = this.elRef.nativeElement;
+      this.MediaElement = this.ComponentElements?.querySelector(
+        'img'
+      ) as HTMLImageElement;
       this.TempImageElement.src = this.src;
-      this.ImageElement = this.ImageElementRef.nativeElement;
+
       this.imageLoad$ = fromEvent(this.TempImageElement, 'load').pipe(
         tap((event) => {
-          const imageW = this.ImageElement.clientWidth;
-          const imageH = this.ImageElement.clientHeight;
+          const imageW = this.MediaElement?.clientWidth;
+          const imageH = this.MediaElement?.clientHeight;
           this.getCenter();
         }),
       );
-      this.scaleChange = this.form.get('slider').valueChanges.pipe(
+      this.scaleChange = this.form.controls['slider'].valueChanges.pipe(
         tap((value) => {
           if (value / 1000 <= 1) {
             this.scale = 1;
           } else {
             this.scale = value / 1000;
           }
-          this.positionChange.next({ ...this.focusPointAttr, s: this.scale });
+          this.positionChange.next({...this.focusPointAttr, s: this.scale});
         }),
       );
     }
   }
 
   public onClickFocus(e: MouseEvent) {
-    const imageW = this.ImageElement.clientWidth;
-    const imageH = this.ImageElement.clientHeight;
+    const imageW = this.MediaElement?.clientWidth as number;
+    const imageH = this.MediaElement?.clientHeight as number;
     let offsetX;
     let offsetY;
     if (e) {
-      offsetX = e.offsetX - this.ImageElement.offsetLeft;
-      offsetY = e.offsetY - this.ImageElement.offsetTop;
+      offsetX = e.offsetX - (this.MediaElement as HTMLElement).offsetLeft;
+      offsetY = e.offsetY - (this.MediaElement as HTMLElement).offsetTop;
     } else {
-      offsetX = 0.0 - this.ImageElement.offsetLeft;
-      offsetY = 0.0 - this.ImageElement.offsetTop;
+      offsetX = 0.0 - (this.MediaElement as HTMLElement).offsetLeft;
+      offsetY = 0.0 - (this.MediaElement as HTMLElement).offsetTop;
     }
     const focusX = (offsetX / imageW - 0.5) * 2;
     const focusY = (offsetY / imageH - 0.5) * -2;
@@ -85,28 +82,22 @@ export class NgxFocusPointSelectComponent implements OnInit {
     this.focusPointAttr.y = this.truncateDecimals(focusY, 2);
     this.selectPosition.x = (offsetX / imageW) * 100;
     this.selectPosition.y = (offsetY / imageH) * 100;
-    this.positionChange.next({ ...this.focusPointAttr, s: this.scale });
-    this.change.next({ ...this.focusPointAttr, s: this.scale });
+    this.positionChange.next({...this.focusPointAttr, s: this.scale});
   }
 
   public getCenter() {
-    const imageW = this.ImageElement.clientWidth;
-    const imageH = this.ImageElement.clientHeight;
-    const offsetX = imageW / 2 - this.ImageElement.offsetLeft;
-    const offsetY = imageH / 2 - this.ImageElement.offsetTop;
-    if (this.selectPosition) {
-      this.selectPosition.x = (offsetX / imageW) * 100;
-      this.selectPosition.y = (offsetY / imageH) * 100;
-    } else {
-      this.selectPosition.x = (offsetX / imageW) * 100;
-      this.selectPosition.y = (offsetY / imageH) * 100;
-    }
+    const imageW = (this.MediaElement as HTMLElement).clientWidth;
+    const imageH = (this.MediaElement as HTMLElement).clientHeight;
+    const offsetX = imageW / 2 - (this.MediaElement as HTMLElement).offsetLeft;
+    const offsetY = imageH / 2 - (this.MediaElement as HTMLElement).offsetTop;
+    this.selectPosition.x = (offsetX / imageW) * 100;
+    this.selectPosition.y = (offsetY / imageH) * 100;
   }
 
-  public truncateDecimals(number, digits) {
-    const multiplier = Math.pow(10, digits),
-      adjustedNum = number * multiplier,
-      truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
+  public truncateDecimals(num: number, digits: number) {
+    const multiplier = Math.pow(10, digits);
+    const adjustedNum = num * multiplier;
+    const truncatedNum = Math[adjustedNum < 0 ? 'ceil' : 'floor'](adjustedNum);
     return truncatedNum / multiplier;
   }
 }

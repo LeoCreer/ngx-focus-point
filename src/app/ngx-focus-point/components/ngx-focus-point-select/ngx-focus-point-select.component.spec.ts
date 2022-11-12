@@ -1,16 +1,16 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { NgxFocusPointSelectComponent } from './ngx-focus-point-select.component';
+import { NgxFocusPointSelectComponent } from "./ngx-focus-point-select.component";
 
-describe('NgxFocusPointSelectComponent', () => {
+describe("NgxFocusPointSelectComponent", () => {
   let component: NgxFocusPointSelectComponent;
   let fixture: ComponentFixture<NgxFocusPointSelectComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NgxFocusPointSelectComponent ]
+      declarations: [NgxFocusPointSelectComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -19,7 +19,7 @@ describe('NgxFocusPointSelectComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

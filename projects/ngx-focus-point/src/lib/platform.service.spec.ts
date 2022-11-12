@@ -1,13 +1,13 @@
 import { TestBed } from "@angular/core/testing";
 
-import { OnResizeService } from "./on-resize.service";
+import { PlatformService } from "./platform.service";
 
-describe("OnResizeService", () => {
-  let service: OnResizeService;
+describe("PlatformService", () => {
+  let service: PlatformService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(OnResizeService);
+    service = TestBed.inject(PlatformService);
   });
 
   it("should be created", () => {

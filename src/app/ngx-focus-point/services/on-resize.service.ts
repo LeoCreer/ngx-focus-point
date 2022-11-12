@@ -1,5 +1,4 @@
-import { ApplicationRef, Injectable } from '@angular/core';
-import { debounceTime, first } from 'rxjs/operators';
+import { ApplicationRef, Injectable } from "@angular/core";
 
 interface Size {
   width: number;
@@ -7,14 +6,16 @@ interface Size {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root"
 })
 export class OnResizeService {
-  private animationFrameHandle;
-  readonly resizeEventName = 'resize';
-  readonly sizeCacheKey = 'currentSize';
-  public elements: Array<HTMLElement>;
-  constructor(private app: ApplicationRef) {}
+  readonly resizeEventName = "resize";
+  readonly sizeCacheKey = "currentSize";
+  public elements: Array<HTMLElement> | undefined;
+  private animationFrameHandle: undefined | any;
+
+  constructor(private app: ApplicationRef) {
+  }
 
   public onResize(htmlElements: Array<HTMLElement>): Array<HTMLElement> {
     this.elements = htmlElements;
@@ -27,37 +28,40 @@ export class OnResizeService {
       if (!skipStop) {
         this.stop();
       }
-      this.elements
+      (this.elements as Array<HTMLElement>)
         .filter((element) => this.isElementInViewport(element))
         .forEach((element) => {
-          // console.log(element.parentElement)
           const previousSize = this.getDataFromElement(element, this.sizeCacheKey);
           const currentSize = this.getSizeFromElement(element);
-          // const parentPreviousSize = this.getDataFromElement(element.parentElement, this.sizeCacheKey);
-          // const parentCurrentSize = this.getSizeFromElement(element);
           if (previousSize && this.checkSizeDiff(currentSize, previousSize)) {
             element.dispatchEvent(
               new CustomEvent(this.resizeEventName, {
-                detail: currentSize,
-              }),
+                detail: currentSize
+              })
             );
           }
 
           this.setDataInElement(element, this.sizeCacheKey, currentSize);
         });
 
-      this.app.isStable.pipe(first((isStable) => isStable === true)).subscribe((isStable) => {
-        if (isStable) {
-          if (this.isWindowAvailable()) {
-            this.animationFrameHandle = requestAnimationFrame(() => this.start(true));
-          } else {
-            this.animationFrameHandle = setTimeout(() => this.start(true), 1000 / 60);
-          }
-        } else {
-          this.stop();
-        }
-      });
-    } catch (e) {}
+      // this.app.isStable.pipe(first((isStable) => isStable === true)).subscribe((isStable) => {
+      //   if (isStable) {
+      //     if (this.isWindowAvailable()) {
+      //       this.animationFrameHandle = requestAnimationFrame(() => this.start(true));
+      //     } else {
+      //       this.animationFrameHandle = setTimeout(() => this.start(true), 1000 / 60);
+      //     }
+      //   } else {
+      //     this.stop();
+      //   }
+      // });
+      if (this.isWindowAvailable()) {
+        this.animationFrameHandle = requestAnimationFrame(() => this.start(true));
+      } else {
+        this.animationFrameHandle = setTimeout(() => this.start(true), 1000 / 60);
+      }
+    } catch (e) {
+    }
   }
 
   public isWindowAvailable() {
@@ -99,7 +103,7 @@ export class OnResizeService {
   }
 
   public getDataFromElement(element: HTMLElement, key: string): any | undefined {
-    return element.dataset[key] ? JSON.parse(element.dataset[key]) : undefined;
+    return element.dataset[key] ? JSON.parse(element.dataset[key] as string) : undefined;
   }
 
   public checkSizeDiff(size1: Size, size2: Size) {
@@ -111,12 +115,12 @@ export class OnResizeService {
       const computedStyles = window.getComputedStyle(element);
       return {
         width: parseInt(computedStyles.width, 10),
-        height: parseInt(computedStyles.height, 10),
+        height: parseInt(computedStyles.height, 10)
       };
     } catch (e) {
       return {
         width: 0,
-        height: 0,
+        height: 0
       };
     }
   }
