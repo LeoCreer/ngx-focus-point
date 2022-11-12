@@ -2,7 +2,7 @@ import { Component, ElementRef, Inject, Input, OnInit, Output, PLATFORM_ID, View
 import { BehaviorSubject, fromEvent, Observable, Subject } from 'rxjs';
 import { debounceTime, filter, tap } from 'rxjs/operators';
 import { PositionModel } from '../../models/position.model';
-import { FormControl, FormGroup } from '@angular/forms';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
 
 @Component({
   selector: 'ngx-focus-point-select',
@@ -20,8 +20,8 @@ export class NgxFocusPointSelectComponent implements OnInit {
   private ImageElement: HTMLImageElement;
   private TempImageElement: HTMLImageElement = this.getDocument() ? document.createElement('img') : null;
   public scaleChange: Observable<any>;
-  public form: FormGroup = new FormGroup({
-    slider: new FormControl(0),
+  public form: UntypedFormGroup = new UntypedFormGroup({
+    slider: new UntypedFormControl(0),
   });
   public focusPointAttr: PositionModel = {
     x: 0,

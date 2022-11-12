@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PositionModel } from './ngx-focus-point/models/position.model';
-import { FormControl } from '@angular/forms';
+import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -14,14 +14,14 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'NGX-Focus-Point';
   public position: PositionModel;
   public routes$: Subscription;
-  public src: FormControl = new FormControl(null);
-  public data: FormControl;
+  public src: UntypedFormControl = new UntypedFormControl(null);
+  public data: UntypedFormControl;
   public preset = {x: -0.39, y: 0.13, w: 0, h: 0, s: 1};
 
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.data = new FormControl(JSON.stringify(this.position, null, 2));
+    this.data = new UntypedFormControl(JSON.stringify(this.position, null, 2));
     this.routes$ = this.route.queryParams
       .pipe(
         tap((params) => {
