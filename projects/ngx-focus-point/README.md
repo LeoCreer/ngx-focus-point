@@ -47,7 +47,6 @@ Use 'ngx-focus-point-select' component.
   s?: number;
 }
 ```
-##Believable Creations 
-Submit a pull request [Help](https://github.com/LeoCreer/NGX-Focus-Point).
+### Believable Creations Submit a pull request [Help](https://github.com/LeoCreer/NGX-Focus-Point).
 
 
