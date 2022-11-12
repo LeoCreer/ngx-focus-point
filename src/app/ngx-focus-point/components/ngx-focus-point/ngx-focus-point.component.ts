@@ -1,12 +1,14 @@
 import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { fromEvent, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { OnResize } from '../../on-resize';
+
+import { OnResizeService } from '../../services/on-resize.service';
 
 @Component({
   selector: 'ngx-focus-point',
   templateUrl: './ngx-focus-point.component.html',
   styleUrls: ['./ngx-focus-point.component.scss'],
+  providers: [OnResizeService],
 })
 export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
   @Input() width?: string;
@@ -47,7 +49,7 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
     `;
   private initCss = `transform: none;`;
 
-  constructor(private elRef: ElementRef) {
+  constructor(private elRef: ElementRef, private onResizeSvc: OnResizeService) {
     if (!this.focusX) {
       this.focusX = 0.0;
     }
@@ -79,8 +81,8 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
       )
       .subscribe();
 
-    const resize = new OnResize([this.ComponentElements]);
-    this.resizeSub$ = fromEvent(resize.elements[0], 'resize')
+    const elements = this.onResizeSvc.onResize([this.ComponentElements]);
+    this.resizeSub$ = fromEvent(elements[0], 'resize')
       .pipe(
         tap((event) => {
           this.adjustFocus();
@@ -136,7 +138,7 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
           this.imageWidth,
           parseFloat(!this.focusX ? '0.0' : this.focusX.toString()),
           false,
-          this.scale
+          this.scale,
         );
       } else if (wR < hR) {
         vShift = this.calcShift(
@@ -145,14 +147,14 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
           this.imageHeight,
           parseFloat(!this.focusY ? '0.0' : this.focusY.toString()),
           true,
-          this.scale
+          this.scale,
         );
       }
       const Y = parseFloat(!this.focusY ? '0.0' : this.focusY.toString());
       const X = parseFloat(!this.focusX ? '0.0' : this.focusX.toString());
 
       if (this.scale > 1) {
-        //TODO: find max edge.
+        // TODO: find max edge.
         this.ImageElement.style.transform = `translateX(${this.scale * (X * -50)}%) translateY(${
           this.scale * (Y * 50)
         }%)  scale(${this.scale})`;
@@ -179,13 +181,13 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
     const focusFactor = (focusSize + 1) / 2; // Focus point of resize image in px
 
     const scaledImage = Math.floor(imageSize / conToImageRatio); // Can't use width() as images may be display:none
-    let focus = Math.floor(focusFactor * scaledImage );
+    let focus = Math.floor(focusFactor * scaledImage);
 
     if (toMinus) {
       focus = scaledImage - focus;
     }
     let focusOffset = focus - containerCenter; // Calculate difference between focus point and center
-    const remainder = (scaledImage - focus); // Reduce offset if necessary so image remains filled
+    const remainder = scaledImage - focus; // Reduce offset if necessary so image remains filled
     const containerRemainder = containerSize - containerCenter;
     if (remainder < containerRemainder) {
       focusOffset -= containerRemainder - remainder;
@@ -195,6 +197,6 @@ export class NgxFocusPointComponent implements OnInit, OnDestroy, OnChanges {
       focusOffset = 0;
     }
 
-    return ((focusOffset ) * -100) / containerSize;
+    return (focusOffset * -100) / containerSize;
   }
 }

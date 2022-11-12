@@ -4,6 +4,7 @@ export class OnResize {
   readonly sizeCacheKey = 'currentSize';
 
   constructor(public elements: Array<HTMLElement>) {
+    console.log(elements);
     this.start();
   }
 
@@ -23,6 +24,7 @@ export class OnResize {
       this.elements
         .filter((element) => isElementInViewport(element))
         .forEach((element) => {
+          // console.log(element.parentElement)
           const previousSize = getDataFromElement(element, this.sizeCacheKey);
           const currentSize = getSizeFromElement(element);
 
@@ -35,6 +37,7 @@ export class OnResize {
           }
           setDataInElement(element, this.sizeCacheKey, currentSize);
         });
+
       if (isWindowAvailable()) {
         this.animationFrameHandle = requestAnimationFrame(() => this.start(true));
       } else {
