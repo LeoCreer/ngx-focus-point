@@ -14,11 +14,11 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "dev:ssr": "ng run NGX-Focus-Point:serve-ssr",
-    "serve:ssr": "node dist/NGX-Focus-Point/server/main.js",
-    "build:ssr": "ng build --configuration production && ng run NGX-Focus-Point:server:production",
-    "build:ssr:staging": "ng build --configuration staging && ng run NGX-Focus-Point:server",
-    "prerender": "ng run NGX-Focus-Point:prerender"
+    "dev:ssr": "ng run ngx-focus-point:serve-ssr",
+    "serve:ssr": "node dist/ngx-focus-point/server/main.js",
+    "build:ssr": "ng build --configuration production && ng run ngx-focus-point:server:production",
+    "build:ssr:staging": "ng build --configuration staging && ng run ngx-focus-point:server",
+    "prerender": "ng run ngx-focus-point:prerender"
   },
   "private": true,
   "dependencies": {
