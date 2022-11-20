@@ -7,7 +7,7 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve -o",
     "build": "ng build --configuration production --output-path=www --base-href=/ngx-focus-point/",
     "build-library": "ng build ngx-focus-point --configuration production",
     "publish-library": "cd dist/ngx-focus-point && npm publish",
